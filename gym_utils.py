@@ -22,6 +22,9 @@ import time
 
 import matplotlib.pyplot as plt
 from matplotlib import colors
+from matplotlib import animation
+
+import imageio
 
 
 class SMBRamWrapper(gym.ObservationWrapper):
@@ -232,11 +235,6 @@ class SMB():
             ax = fig.add_subplot(gs[n, 1])
             im = ax.imshow(states[0,:,:,n], cmap=cmap, norm=norm)
             ax.set_axis_off()
-            #ax.set_xticks(np.arange(0, 16, 1))
-            #ax.set_yticks(np.arange(0, 13, 1))
-            #ax.set_xticklabels([])
-            #ax.set_yticklabels([])
-            #ax.grid()
 
         # rendered screen
         ax = fig.add_subplot(gs[:, 0])
@@ -245,5 +243,27 @@ class SMB():
         ax.text(0, -5, 'score: '+str(int(score[0])))
         
         plt.show()
+    
+    def make_animation(self, deterministic=True, filename='gym_animation.gif', RETURN_FRAMES=False):
+        '''
+        Make an animation of the rendered screen
+        '''
+        # run policy
+        frames = []
+        states = self.env.reset()
+        done = False
+        
+        while not done:
+            #frames.append(self.env.render(mode="rgb_array"))
+            im = self.env.render(mode="rgb_array")
+            frames.append(im.copy())
+            action, _ = self.model.predict(states, deterministic=deterministic)
+            states, reward, done, info = self.env.step(action)
+            
+        if RETURN_FRAMES == False:
+            # make animation
+            imageio.mimsave(filename, frames, fps=50)
+        else: # make animation manually in case Mario gets stuck in the level and drags the animation for too long
+            return frames
 
     
