@@ -15,7 +15,7 @@ I used the [gym-super-mario-bros](https://github.com/Kautenja/gym-super-mario-br
 
 *	Mario & the enemies’ locations are represented by their x & y positions in unit of pixels rather than grid boxes. To fit them onto the grid I divide each pixel values by 16 and round to the nearest integers. 
 
-*	Since there are a lot of tile and enemy types, to make things simpler I assigned an integer value to each group: 2 for Mario himself, 1 for all non-empty tiles, 0 for empty tiles, and -1 for enemies. This strategy worked out fine for world 1-1, but for later levels where there are non-stompable enemies like Piranha Plants or Spinies, the trained agent still treats them as Goombas and commits suicides. 
+*	Since there are a lot of tile and enemy types, to make things simpler I assigned an integer value to each group: 2 for Mario himself, 1 for all non-empty tiles, 0 for empty tiles, and -1 for enemies. This strategy worked out fine for world 1-1, but for later levels where there are non-stompable enemies like Piranha Plants or Spinies, the trained agent still treats them as Goombas and makes Mario committing suicides. 
 
 The RAM access function is wrapped inside an ObservationWrapper. To add temporal information I also added a frame stack which returns the most recent n_stack number of frames, with each 2 separated by (n_skip – 1) frames. So without using cropping, the observation method returns a 3D array of shape (13, 16, n_stack). SB3 does have a VecFrameStack wrapper but I had trouble getting it working with my custom environment and so I wrote my own. 
 
