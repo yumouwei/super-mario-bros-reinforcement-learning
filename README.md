@@ -12,9 +12,7 @@ To train a new model run ./smb-ram-ppo-train.ipynb.
 I used the [gym-super-mario-bros](https://github.com/Kautenja/gym-super-mario-bros) (4.3.0) environment and implemented a custom observation method that reads data from the game’s RAM map. The code can be found in ./smb_utils.py. In short:
 
 *	The tiles (blocks, items, pipes, etc) are stored in 0x0500-0x0069F as a 32x13 grid (technically it’s two 16x13 grids but it’s not difficult to get the correct coordinates). The actual displayed grid (16x13) scrolls through this grid; once it reaches the end it wraps around and updates the memory grid (32x13) incrementally. Each tile corresponds to a 16x16 pixel square in the rendered screen, and since the top two rows (where the scores and other information are displayed) aren’t actually stored in the memory grid, we end up with 16x(13+2)*16 = 256x240 which is the pixel dimensions of the displayed screen. 
-
 *	Mario & the enemies’ locations are represented by their x & y positions in unit of pixels rather than grid boxes. To fit them onto the grid I divide each pixel values by 16 and round to the nearest integers. 
-
 *	Since there are a lot of tile and enemy types, to make things simpler I assigned an integer value to each group: 2 for Mario himself, 1 for all non-empty tiles, 0 for empty tiles, and -1 for enemies. This strategy worked out fine for world 1-1, but for later levels where there are non-stompable enemies like Piranha Plants or Spinies, the trained agent still treats them as Goombas and makes Mario committing suicides. 
 
 The RAM access function is wrapped inside an ObservationWrapper. To add temporal information I also added a frame stack which returns the most recent n_stack number of frames, with each 2 separated by (n_skip – 1) frames. So without using cropping, the observation method returns a 3D array of shape (13, 16, n_stack). SB3 does have a VecFrameStack wrapper but I had trouble getting it working with my custom environment and so I wrote my own. 
@@ -58,8 +56,6 @@ Unfortunately even though the agent completed level 1-1, it still struggled in o
 I can think of a few ways to address this problem, such as:
 
 *	Random starting location in a level – I don’t think this is currently supported by this gym environment. We could try e.g. let the game run for some random number of steps first before letting the agent take over, but then the start position would still bias toward the earlier part of the stage. Still it could be something worth trying.
-
 *	Transfer learning: use a pre-trained agent and train it on a new level for a less amount of steps/episodes. By the time this agent sees more levels it should supposedly act more like as if it knows how to play the game rather than memorizing a level’s layout. That however assumes it doesn’t forget what it learnt before as it trains on a different level.
-
 *	Train on a subset of stages: in each episode we let the agent to train on a different stage selected randomly from a subset of (similar) levels. This is now supported after release 7.4.0 and would be very easy to implement. However I’m worried if the policy could actually converge but it worths trying nonetheless.
 
