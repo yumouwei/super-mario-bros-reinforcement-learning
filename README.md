@@ -26,7 +26,7 @@ I used the default reward function which is basically “how far did Mario trave
 
 ## Training & Results
 
-I used the PPO agent in SB3 with the default paramenters and a linear learning rate scheduler to gradually reduce lr to 0 by the end of a session. Adding the scheduler significantly improved the stability of the training process. Each model was trained for 10M steps and took about 4.5 hours to finish.
+I used the PPO agent in SB3 with MlpPolicy (2 layers of Dense(64)), default hyperparamenters and a linear learning rate scheduler to gradually reduce lr to 0 by the end of a session. Adding the scheduler significantly improved the stability of the training process. Each model was trained for 10M steps and took about 4.5 hours to finish.
 
 <img src="https://github.com/yumouwei/super-mario-bros-reinforcement-learning/blob/main/gif/world-1-1-n_stack%3D4-with_io-optimized.gif" width="400" >
 
