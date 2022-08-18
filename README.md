@@ -12,7 +12,7 @@ To train a new model run ./smb-ram-ppo-train.ipynb.
 | Module               | Version |
 |----------------------|---------|
 | gym                  | 0.21.0  |
-| gym-super-mario-bros | 7.3.3   |
+| gym-super-mario-bros | 7.3.3 (7.4.0 also tested & worked)   |
 | nes-py               | 8.2.1   |
 | pyglet               | 1.5.21  |
 | stable-baselines3    | 1.5.0   |
