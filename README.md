@@ -30,7 +30,8 @@ I used the default reward function which is basically “how far did Mario trave
 
 I used the PPO agent in SB3 with the default paramenters and a linear learning rate scheduler to gradually reduce lr to 0 by the end of a session. Adding the scheduler significantly improved the stability of the training process. Each model was trained for 10M steps and took about 4.5 hours to finish.
 
-<img src="https://user-images.githubusercontent.com/46117079/185277702-02190c31-7d88-4f71-a2f1-72f1bb879829.gif" width="400" >
+<img src="https://github.com/yumouwei/super-mario-bros-reinforcement-learning/blob/main/world-1-1-n_stack%3D4-with_io-optimized.gif" width="400" >
+
 
 Here’s the result of model pre-trained-1.zip (n_stack=4, n_skip=4, no cropping -- the same model shown on top). I wouldn’t say the model converged very well as the predicted actions still fluctuates a lot especially when Mario is airborne, but nonetheless Mario did complete the level at the end.
 
