@@ -8,11 +8,17 @@ To train a new model run ./smb-ram-ppo-train.ipynb.
 ![world-1-1-n_stack=4](https://user-images.githubusercontent.com/46117079/185268710-2d477eb0-b3f7-4ab8-865d-130e3a23a3e9.gif)
 
 ## Requirements (tested)
-* gym-super-mario-bros==7.3.3
-* nes-py==8.2.1 & pyglet==1.5.21  (Please refer to [this issue](https://github.com/Kautenja/gym-super-mario-bros/issues/99) for installing nes-py & pyglet.)
-* stable-baselines3==1.5.0
-* torch==1.11.0
 
+| Module               | Version |
+|----------------------|---------|
+| gym                  | 0.21.0  |
+| gym-super-mario-bros | 7.3.3   |
+| nes-py               | 8.2.1   |
+| pyglet               | 1.5.21  |
+| stable-baselines3    | 1.5.0   |
+| torch                | 1.11.0  |
+
+(Please refer to [this issue](https://github.com/Kautenja/gym-super-mario-bros/issues/99) for installing nes-py & pyglet.)
 
 ## Gym Environment
 
