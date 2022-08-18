@@ -30,11 +30,14 @@ I used the default reward function which is basically “how far did Mario trave
 
 I used the PPO agent in SB3 with the default paramenters and a linear learning rate scheduler to gradually reduce lr to 0 by the end of a session. Adding the scheduler significantly improved the stability of the training process. Each model was trained for 10M steps and took about 4.5 hours to finish.
 
-![world-1-1-n_stack=4-with_io-compressed](https://user-images.githubusercontent.com/46117079/184560062-08e933bc-f88a-43ca-a790-fd5c65b2e71e.gif)
+<img src="https://user-images.githubusercontent.com/46117079/184560062-08e933bc-f88a-43ca-a790-fd5c65b2e71e.gif" width="400" >
+
 
 Here’s the result of model pre-trained-1.zip (n_stack=4, n_skip=4, no cropping -- the same model shown on top). I wouldn’t say the model converged very well as the predicted actions still fluctuates a lot especially when Mario is airborne, but nonetheless Mario did complete the level at the end.
 
-![evaluate_policy](https://user-images.githubusercontent.com/46117079/185268750-4d273c40-9a4f-4367-96d4-dc0655ddbc7b.png)
+<img src="https://user-images.githubusercontent.com/46117079/185268750-4d273c40-9a4f-4367-96d4-dc0655ddbc7b.png" width="500" >
+
+
 
 |                  |![world-1-1-n_stack=1](https://user-images.githubusercontent.com/46117079/185268999-1c00d0a6-643b-41d3-8e00-62dbcbc83746.gif)|![world-1-1-n_stack=2](https://user-images.githubusercontent.com/46117079/185269020-9f9c7abc-960e-42f4-95e7-78f88e23307e.gif)|![world-1-1-n_stack=4](https://user-images.githubusercontent.com/46117079/185269067-bdd0023d-e667-4baf-8365-df93dfa49b89.gif)|
 |------------------|-------|------|------|
@@ -50,10 +53,13 @@ So does adding temporal information actually matter? To test this I trained two 
 |---------------------------------------------------|--------------------------------------------|--------------------------------------------|
 | 1-2: Mario can’t jump over a slightly higher wall | 4-1: Mario fails to jump over a wider pit. | 5-1: Mario tries to stomp a Piranha Plant. |
 
-Unfortunately even though the agent completed level 1-1, it still struggled in other levels in various ways. To me it seems the agent didn’t learn every aspect of the game’s mechanism as I intended; instead it learned more about the landscape of the level and optimized a path which took Mario from the starting position to the flag in the least amount of time. These two aspects are definitely related, but the difference is whether to “hit jump because there’s a wall in front” versus “hit jump at this location every time” – the first one is going to be more useful when Mario encounters a different tile layout in a new level.
+Unfortunately even though the agent completed level 1-1, it still struggled in other levels in various ways. To me it seems the agent didn’t learn every aspect of the game’s mechanism as I intended – it did figure out to hit the jump button before ramming into an enemy (see the 1-2 & 5-1 examples) or when seeing there’s there’s a bottomless pit in front (4-1 example although Mario didn’t make the jump). But then having completed 1-1 flawlessly vs failing every other stages suggests that the agent did rely on learning the level’s landscape in order to optimize a path from the starting position to the goal pole. I think these two aspects of learning are definitely related, but the prior one is going to be more useful when Mario encounters a different tile layout in a new level.
 
 I can think of a few ways to address this problem, such as:
+
 *	Random starting location in a level – I don’t think this is currently supported by this gym environment. We could try e.g. let the game run for some random number of steps first before letting the agent take over, but then the start position would still bias toward the earlier part of the stage. Still it could be something worth trying.
+
 *	Transfer learning: use a pre-trained agent and train it on a new level for a less amount of steps/episodes. By the time this agent sees more levels it should supposedly act more like as if it knows how to play the game rather than memorizing a level’s layout. That however assumes it doesn’t forget what it learnt before as it trains on a different level.
+
 *	Train on a subset of stages: in each episode we let the agent to train on a different stage selected randomly from a subset of (similar) levels. This is now supported after release 7.4.0 and would be very easy to implement. However I’m worried if the policy could actually converge but it worths trying nonetheless.
 
