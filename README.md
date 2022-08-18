@@ -9,7 +9,7 @@ To train a new model run ./smb-ram-ppo-train.ipynb.
 
 ## Gym Environment
 
-I used the [gym-super-mario-bros](https://github.com/Kautenja/gym-super-mario-bros) (4.3.0) environment and implemented a custom observation method that reads data from the game’s RAM map. The code can be found in ./smb_utils.py. In short:
+I used the [gym-super-mario-bros](https://github.com/Kautenja/gym-super-mario-bros) (7.3.0) environment and implemented a custom observation method that reads data from the game’s RAM map. The code can be found in ./smb_utils.py. In short:
 
 *	The tiles (blocks, items, pipes, etc) are stored in 0x0500-0x0069F as a 32x13 grid (technically it’s two 16x13 grids but it’s not difficult to get the correct coordinates). The actual displayed grid (16x13) scrolls through this grid; once it reaches the end it wraps around and updates the memory grid (32x13) incrementally. Each tile corresponds to a 16x16 pixel square in the rendered screen, and since the top two rows (where the scores and other information are displayed) aren’t actually stored in the memory grid, we end up with 16x(13+2)*16 = 256x240 which is the pixel dimensions of the displayed screen. 
 *	Mario & the enemies’ locations are represented by their x & y positions in unit of pixels rather than grid boxes. To fit them onto the grid I divide each pixel values by 16 and round to the nearest integers. 
