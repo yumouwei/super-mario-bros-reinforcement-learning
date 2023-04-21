@@ -22,9 +22,9 @@ To train a new model run ./smb-ram-ppo-train.ipynb.
 
 ## Gym Environment
 
-I used the [gym-super-mario-bros](https://github.com/Kautenja/gym-super-mario-bros) environment and implemented a custom observation method that reads data from the game’s RAM map. The code can be found in ./smb_utils.py. In short:
+I used the [gym-super-mario-bros](https://github.com/Kautenja/gym-super-mario-bros) environment and implemented a custom observation method that reads data from the game’s RAM map. The code can be found in `./smb_utils.py`. Please also checkout the references in `./smb-ram-ppo-train.ipynb`. In short:
 
-*	The tiles (blocks, items, pipes, etc) are stored in 0x0500-0x0069F as a 32x13 grid (technically it’s two 16x13 grids but it’s not difficult to get the correct coordinates). The actual displayed grid (16x13) scrolls through this grid; once it reaches the end it wraps around and updates the memory grid (32x13) incrementally. Each tile corresponds to a 16x16 pixel square in the rendered screen, and since the top two rows (where the scores and other information are displayed) aren’t actually stored in the memory grid, we end up with 16x(13+2)*16 = 256x240 which is the pixel dimensions of the displayed screen. 
+*	The tiles (blocks, items, pipes, etc) are stored in `0x0500-0x0069F` as a 32x13 grid (technically it’s two 16x13 grids but it’s not difficult to get the correct coordinates). The actual displayed grid (16x13) scrolls through this grid; once it reaches the end it wraps around and updates the memory grid (32x13) incrementally. Each tile corresponds to a 16x16 pixel square in the rendered screen, and since the top two rows (where the scores and other information are displayed) aren’t actually stored in the memory grid, we end up with 16x(13+2)*16 = 256x240 which is the pixel dimensions of the displayed screen. 
 *	Mario & the enemies’ locations are represented by their x & y positions in unit of pixels rather than grid boxes. To fit them onto the grid I divide each pixel values by 16 and round to the nearest integers. 
 *	Since there are a lot of tile and enemy types, to make things simpler I assigned an integer value to each group: 2 for Mario himself, 1 for all non-empty tiles, 0 for empty tiles, and -1 for enemies. This strategy worked out fine for world 1-1, but for later levels where there are non-stompable enemies like Piranha Plants or Spinies, the trained agent still treats them as Goombas and makes Mario committing suicides. 
 
@@ -39,7 +39,7 @@ I used the default reward function which is basically “how far did Mario trave
 
 ## Training & Results
 
-I used the PPO agent in SB3 with MlpPolicy (2 layers of Dense(64)), default hyperparamenters and a linear learning rate scheduler to gradually reduce lr to 0 by the end of a session. Adding the scheduler significantly improved the stability of the training process. Each model was trained for 10M steps and took about 4.5 hours to finish.
+I used the PPO agent in SB3 with MlpPolicy (2 layers of Dense(64)), default hyperparamenters and a linear annealing learning rate scheduler to gradually reduce lr to 0 by the end of a session. Adding the scheduler significantly improved the stability of the training process. Each model was trained for 10M steps and took about 4.5 hours to finish.
 
 <img src="https://github.com/yumouwei/super-mario-bros-reinforcement-learning/blob/main/gif/world-1-1-n_stack%3D4-with_io-optimized.gif" width="400" >
 
