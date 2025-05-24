@@ -27,7 +27,7 @@ from matplotlib import animation
 import imageio
 
 
-class SMBRamWrapper(gym.ObservationWrapper):
+class SMBRamWrapper(gym.core.ObservationWrapper):
     def __init__(self, env, crop_dim=[0, 16, 0, 13], n_stack=4, n_skip=2):
         '''
         crop_dim: [x0, x1, y0, y1]
@@ -59,8 +59,12 @@ class SMBRamWrapper(gym.ObservationWrapper):
         obs = self.frame_stack[:,:,::self.n_skip]
         return obs
     
-    def reset(self):
-        obs = self.env.reset()
+    def reset(self, **kwargs):
+        # To be compatible with latest SB3 and shimmy
+        kwargs.pop('seed', None)
+        kwargs.pop('options', None)
+        
+        obs = self.env.reset(**kwargs)
         self.frame_stack = np.zeros((self.height, self.width, (self.n_stack-1)*self.n_skip+1))
         grid = smb_grid(self.env)
         frame = grid.rendered_screen # 2d array
@@ -80,12 +84,22 @@ class SMBRamWrapper(gym.ObservationWrapper):
         return im_crop
     
 
+# Custom wrapper to handle both `seed` and `options` arguments introduced by newer versions of SB3
+class CustomJoypadSpace(JoypadSpace):
+    def reset(self, seed=None, options=None, **kwargs):
+        """
+        Overrides the `reset()` method to ignore `seed` and `options` arguments.
+        """
+        print('Using CustomJoypadSpace')
+        return super().reset(**kwargs)
+
+
 def load_smb_env(name='SuperMarioBros-1-1-v0', crop_dim=[0,16,0,13], n_stack=2, n_skip=4):
     '''
     Wrapper function for loading and processing smb env
     '''
     env = gym_super_mario_bros.make(name)
-    env = JoypadSpace(env, SIMPLE_MOVEMENT)
+    env = CustomJoypadSpace(env, SIMPLE_MOVEMENT)
     env_wrap = SMBRamWrapper(env, crop_dim, n_stack=n_stack, n_skip=n_skip)
     env_wrap = DummyVecEnv([lambda: env_wrap])
     

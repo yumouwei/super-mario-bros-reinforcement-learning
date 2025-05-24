@@ -17,7 +17,11 @@ from gym_super_mario_bros.actions import SIMPLE_MOVEMENT
 class smb_grid:
     
     def __init__(self, env):
-        self.ram = env.unwrapped.ram
+        # Legacy
+        # self.ram = env.unwrapped.ram
+        
+        # With apply_api_compatibility=True
+        self.ram = env.unwrapped.env.unwrapped.ram
         self.screen_size_x = 16     # rendered screen size
         self.screen_size_y = 13
         

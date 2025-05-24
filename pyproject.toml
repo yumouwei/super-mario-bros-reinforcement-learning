@@ -1,0 +1,16 @@
+[project]
+name = "super-mario-bros-reinforcement-learning"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = "==3.8.*"
+dependencies = [
+    "gym==0.26.2",
+    "gym-super-mario-bros==7.4.0",
+    "imageio>=2.35.1",
+    "nes-py==8.2.1",
+    "notebook>=7.3.3",
+    "opencv-python>=4.11.0.86",
+    "shimmy>=2.0.0",
+    "stable-baselines3==2.4.0",
+]
