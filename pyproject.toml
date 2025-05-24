@@ -1,0 +1,21 @@
+[project]
+name = "super-mario-bros-reinforcement-learning"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.8"
+dependencies = [
+    "gym",
+    "gym-super-mario-bros==7.3.0",
+    "imageio>=2.35.1",
+    "nes-py==8.2.1",
+    "pyglet==1.5.21",
+    "stable-baselines3==1.5.0",
+    "torch==1.11",
+]
+
+[tool.uv]
+override-dependencies = ["gym"]
+
+[tool.uv.sources]
+gym = { git = "https://github.com/Pythoniasm/gym-fork.git", branch = "fix-v0.21.0" }
