@@ -3,7 +3,7 @@ name = "super-mario-bros-reinforcement-learning"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
-requires-python = ">=3.8"
+requires-python = "==3.8.*"
 dependencies = [
     "gym",
     "gym-super-mario-bros==7.3.0",
