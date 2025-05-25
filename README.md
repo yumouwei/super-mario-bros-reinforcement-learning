@@ -7,6 +7,16 @@ To train a new model run `./smb-ram-ppo-train.ipynb`.
 
 ![world-1-1-n_stack=4](https://user-images.githubusercontent.com/46117079/185268710-2d477eb0-b3f7-4ab8-865d-130e3a23a3e9.gif)
 
+## Installation
+
+(May 2025 update) You can now use [uv](https://docs.astral.sh/uv/) to install all the required dependencies!
+
+```
+git clone https://github.com/yumouwei/super-mario-bros-reinforcement-learning.git
+cd super-mario-bros-reinforcement-learning
+uv sync
+```
+
 ## Requirements (tested)
 
 | Module               | Version |
